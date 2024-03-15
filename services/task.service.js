@@ -18,7 +18,7 @@ class TaskService {
         }
     }
 
-    create(task){
+    async create(task){
         const newTask = {
             id: faker.datatype.uuid(),
             ...task
@@ -28,30 +28,41 @@ class TaskService {
         return newTask;
     }
 
-    find(){
-        return this.task;
+    async find(){
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(this.task)
+            }, 2000)
+        });
     }
 
-    findOne(id){
+    async findOne(id){
         return this.task.find(i => i.id == id);
     }
 
-    update(id, change){
-        const i = this.task.findIndex(i => i.id == id);
-        if(i === -1){
-            throw new Error('Task not found');
-        }
+    async update(id, change){
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const i = this.task.findIndex(i => i.id == id);
+                
+                if(i === -1){
+                    throw new Error('Task not found');
+                }
 
-        const task = this.task[i];
-        this.task[i] = {
-            ...task,
-            ...change
-        }
+                const task = this.task[i];
+
+                this.task[i] = {
+                    ...task,
+                    ...change
+                }
+
+                resolve(this.task[i])
+            }, 1000)
+        });
         
-        return this.task[i];
     }
 
-    delete(id){
+    async delete(id){
         const i = this.task.findIndex(i => i.id == id);
         if(i === -1){
             throw new Error('Task not found');
