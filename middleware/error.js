@@ -7,4 +7,13 @@ const errorHandler = (err, req, res, next) => {
     })
 }
 
-module.exports = errorHandler;
+const boomErrorHandler = (err, req, res, next) => {
+    if(err.IsBoom){
+        const { output } = err;
+        res.status(err.statusCode).json(output.payload)
+    } else {
+        next(err);
+    }
+}
+
+module.exports = {errorHandler, boomErrorHandler};

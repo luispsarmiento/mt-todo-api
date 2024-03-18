@@ -1,4 +1,5 @@
 const {faker} = require('@faker-js/faker');
+const boom = require('@hapi/boom');
 
 class TaskService {
 
@@ -37,7 +38,13 @@ class TaskService {
     }
 
     async findOne(id){
-        return this.task.find(i => i.id == id);
+        const task = this.task.find(i => i.id == id);
+
+        if(!task){
+            throw boom.notFound('Task not found');
+        }
+
+        return task;
     }
 
     async update(id, change){
@@ -46,7 +53,7 @@ class TaskService {
                 const i = this.task.findIndex(i => i.id == id);
                 
                 if(i === -1){
-                    throw new Error('Task not found');
+                    throw boom.notFound('Task not found');
                 }
 
                 const task = this.task[i];
@@ -65,7 +72,7 @@ class TaskService {
     async delete(id){
         const i = this.task.findIndex(i => i.id == id);
         if(i === -1){
-            throw new Error('Task not found');
+            throw boom.notFound('Task not found');
         }
 
         this.task.splice(i, 1);

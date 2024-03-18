@@ -20,6 +20,7 @@
     "prettier": "^2.8.8"
   },
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
     "epxress": "^0.0.1-security",
     "express": "^4.17.1"
   }

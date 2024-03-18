@@ -9,32 +9,44 @@ const service = new TaskService();
 // @route     GET /api/tasks
 // @access    Public
 exports.getTasks = asyncHandler(async (req, res, next) => {
-    const taskList = await service.find();
+    try{
+        const taskList = await service.find();
 
-    res.json(taskList);
+        res.json(taskList);
+    }catch(err){
+        next(err);
+    }
 });
 
 exports.getTaskById = asyncHandler(async (req, res, next) => {
-    const {id} = req.params;
+    try{
+        const {id} = req.params;
 
-    const task = service.findOne(id);
+        const task = service.findOne(id);
 
-    if (task == undefined || task == null){
-        res.status(404).json();
+        if (task == undefined || task == null){
+            res.status(404).json();
+        }
+
+        res.json(task);
+    }catch(err){
+        next(err);
     }
-
-    res.json(task);
 });
 
 exports.create = asyncHandler(async (req, res, next) => {
-    const body = req.body;
+    try{
+        const body = req.body;
 
-    const newTask = service.create(body);
+        const newTask = service.create(body);
 
-    res.status(201).json({
-        message: 'created',
-        data: newTask
-    });
+        res.status(201).json({
+            message: 'created',
+            data: newTask
+        });
+    }catch(err){
+        next(err)
+    }
 });
 
 exports.update = asyncHandler(async (req, res, next) => {
@@ -49,10 +61,8 @@ exports.update = asyncHandler(async (req, res, next) => {
             data: taskChanged,
             id
         });
-    } catch (error) {
-        res.status(404).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     }
 });
 
@@ -69,8 +79,6 @@ exports.remove = asyncHandler(async (req, res, next) => {
             id
         });
     } catch (error) {
-        res.status(404).json({
-            message: error.message
-        });
+        next(err);
     }
 });
