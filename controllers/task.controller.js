@@ -1,6 +1,5 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-
 const TaskService = require('./../services/task.service');
 
 const service = new TaskService();
@@ -22,7 +21,7 @@ exports.getTaskById = asyncHandler(async (req, res, next) => {
     try{
         const {id} = req.params;
 
-        const task = service.findOne(id);
+        const task = await service.findOne(id);
 
         if (task == undefined || task == null){
             res.status(404).json();
@@ -38,7 +37,7 @@ exports.create = asyncHandler(async (req, res, next) => {
     try{
         const body = req.body;
 
-        const newTask = service.create(body);
+        const newTask = await service.create(body);
 
         res.status(201).json({
             message: 'created',
@@ -71,7 +70,7 @@ exports.remove = asyncHandler(async (req, res, next) => {
         const {id} = req.params;
         const body = req.body;
 
-        const taskChanged = service.update(id, body);
+        const taskChanged = await service.update(id, body);
 
         res.json({
             message: 'update',

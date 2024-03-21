@@ -1,5 +1,10 @@
 const express = require('express');
 const { 
+    getTaskByIdValidation, 
+    createTaskValidation, 
+    updateTaskValidation 
+} = require('../validations/task.validation');
+const { 
     getTasks,
     getTaskById,
     create,
@@ -11,12 +16,21 @@ const router = express.Router();
 
 router.get('/', getTasks);
   
-router.get('/:id', getTaskById);
+router.get('/:id',
+    getTaskByIdValidation,
+    getTaskById);
 
-router.post('/', create)
+router.post('/', 
+    createTaskValidation,
+    create)
 
-router.patch('/:id', update);
+router.patch('/:id', 
+    getTaskByIdValidation,
+    updateTaskValidation,
+    update);
 
-router.delete('/:id', remove);
+router.delete('/:id', 
+    getTaskByIdValidation,
+    remove);
 
 module.exports = router;

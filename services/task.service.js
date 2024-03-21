@@ -12,7 +12,7 @@ class TaskService {
         const limit = 100;
         for(let i=0; i < limit; i++){
             this.task.push({
-                id: faker.datatype.uuid(),
+                id: faker.database.mongodbObjectId(),
                 name: faker.word.verb(),
                 isDone: false
             });
@@ -21,7 +21,7 @@ class TaskService {
 
     async create(task){
         const newTask = {
-            id: faker.datatype.uuid(),
+            id: faker.database.mongodbObjectId(),
             ...task
         }
         this.task.push(newTask);
