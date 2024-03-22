@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const dotenv = require('dotenv');
+const db = require('./config/db');
 const routerApi = require('./routes');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -8,6 +9,9 @@ const hpp = require('hpp');
 const xss = require('xss-clean');
 const cors = require('cors');
 const {errorHandler, boomErrorHandler} = require('./middleware/error');
+
+// Load env vars
+dotenv.config({ path: './config/.env' });
 
 app.use(express.json());
 
@@ -41,6 +45,13 @@ routerApi(app);
 app.use(boomErrorHandler);
 app.use(errorHandler)
 
-app.listen(port, () => {
-  console.log('Mi port' +  port);
+const port = process.env.PORT;
+db.connectDB((err, db) => {
+  if(err){
+    console.log(err);
+  } else {
+    app.listen(port, () => {
+      console.log('Mi port' +  port);
+    });
+  }
 });

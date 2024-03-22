@@ -1,11 +1,15 @@
 const {faker} = require('@faker-js/faker');
 const boom = require('@hapi/boom');
+const db = require('./../config/db');
+
+const _db = db.getDB();
+const COLLECTION_NAME = "task"
 
 class TaskService {
 
     constructor(){
-        this.task = [];
-        this.generate();
+        this.task = _db.collection(COLLECTION_NAME);
+        //this.generate();
     }
 
     generate(){
