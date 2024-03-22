@@ -1,15 +1,12 @@
 const {faker} = require('@faker-js/faker');
 const boom = require('@hapi/boom');
-const db = require('./../config/db');
+const TaskRepository = require('./../repositories/task.repository');
 
-const _db = db.getDB();
-const COLLECTION_NAME = "task"
+const repository = new TaskRepository();
 
 class TaskService {
 
     constructor(){
-        this.task = _db.collection(COLLECTION_NAME);
-        //this.generate();
     }
 
     generate(){
@@ -34,11 +31,8 @@ class TaskService {
     }
 
     async find(){
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(this.task)
-            }, 2000)
-        });
+        let result = await repository.find();
+        return result;
     }
 
     async findOne(id){

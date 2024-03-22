@@ -13,6 +13,8 @@ const {errorHandler, boomErrorHandler} = require('./middleware/error');
 // Load env vars
 dotenv.config({ path: './config/.env' });
 
+db.setUri(process.env.MONGO_URI);
+
 app.use(express.json());
 
 // Sanitize data
@@ -25,7 +27,10 @@ app.use(xss());
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes,
-  max: 500
+  max: 500,
+  validate: {
+    xForwardedForHeader: false
+  }
 });
 
 app.use(limiter);
@@ -46,12 +51,6 @@ app.use(boomErrorHandler);
 app.use(errorHandler)
 
 const port = process.env.PORT;
-db.connectDB((err, db) => {
-  if(err){
-    console.log(err);
-  } else {
-    app.listen(port, () => {
-      console.log('Mi port' +  port);
-    });
-  }
+app.listen(port, () => {
+  console.log('Mi port ' +  port);
 });

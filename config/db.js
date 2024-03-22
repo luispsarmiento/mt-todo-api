@@ -1,44 +1,49 @@
 const { MongoClient } = require("mongodb");
 const boom = require('@hapi/boom');
 
-// Reference about this https://www.mongodb.com/docs/drivers/node/current/quick-start/connect-to-mongodb/
+// Reference about this:
+// https://www.mongodb.com/docs/drivers/node/current/quick-start/connect-to-mongodb/
+// https://www.mongodb.com/languages/javascript/mongodb-and-npm-tutorial
 // Replace the uri string with your connection string.
 //const uri = "<connection string uri>";
-const uri = process.env.MONGO_URI;
 
 //const client = new MongoClient(uri);
+let _uri;
 
-let _db;
+const setUri = (uri) => _uri = uri;
+const getUri = () => _uri;
 
-const connectDB = callback => {
-    if(_db){
-        return callback(null, _db);
-    }
-
-    MongoClient.connect(uri, {
+const connectDB = async (uri) => {
+    try{
+        const client = new MongoClient(uri,  {
             useNewUrlParser: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
             useUnifiedTopology: true
-        })
-        .then(client => {
-            _db = client.db();
-            callback(null, _db);
-        })
-        .catch(err => {
-            callback(err);
-        })
+        });
+
+        await client.connect();
+
+        return client;
+    }catch(err){
+        throw boom.internal("Cannot establish a connection with the database.");
+    }
 };
 
-const getDB = () => {
-    if(!_db){
-        throw boom.internal("Cannot establish a connection with the database.")
+const execute = async(collName, query) => {
+    let conn;
+    let result;
+
+    try {
+        conn = await connectDB(getUri());
+        const coll = conn.db().collection(collName);
+        result = await query(coll);
+    } finally {
+        await conn.close();
     }
 
-    return _db;
-};
+    return result;
+}
 
-module.exports = { connectDB, getDB };
+module.exports = { connectDB, setUri, getUri, execute };
 
 /*async function run() {
   try {
