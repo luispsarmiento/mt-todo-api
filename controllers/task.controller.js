@@ -58,7 +58,6 @@ exports.update = asyncHandler(async (req, res, next) => {
         res.json({
             message: 'update',
             data: taskChanged,
-            id
         });
     } catch (err) {
         next(err);
@@ -68,16 +67,14 @@ exports.update = asyncHandler(async (req, res, next) => {
 exports.remove = asyncHandler(async (req, res, next) => {
     try {
         const {id} = req.params;
-        const body = req.body;
-
-        const taskChanged = await service.update(id, body);
+        
+        await service.delete(id);
 
         res.json({
-            message: 'update',
-            data: taskChanged,
-            id
+            message: 'deleted',
+            _id: id
         });
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 });

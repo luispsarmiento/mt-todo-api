@@ -22,10 +22,12 @@ class TaskService {
 
     async create(task){
         const newTask = {
-            id: faker.database.mongodbObjectId(),
             ...task
         }
-        this.task.push(newTask);
+
+        const result = await repository.create(task);
+
+        newTask._id = result.insertedId;
 
         return newTask;
     }
@@ -36,7 +38,7 @@ class TaskService {
     }
 
     async findOne(id){
-        const task = this.task.find(i => i.id == id);
+        const task = await repository.find(id);
 
         if(!task){
             throw boom.notFound('Task not found');
@@ -46,34 +48,18 @@ class TaskService {
     }
 
     async update(id, change){
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const i = this.task.findIndex(i => i.id == id);
-                
-                if(i === -1){
-                    throw boom.notFound('Task not found');
-                }
-
-                const task = this.task[i];
-
-                this.task[i] = {
-                    ...task,
-                    ...change
-                }
-
-                resolve(this.task[i])
-            }, 1000)
-        });
+        await repository.update(id, change)
         
+        const taskChanged = {
+            _id: id,
+            ...change
+        }
+
+        return taskChanged;
     }
 
     async delete(id){
-        const i = this.task.findIndex(i => i.id == id);
-        if(i === -1){
-            throw boom.notFound('Task not found');
-        }
-
-        this.task.splice(i, 1);
+        await repository.delete(id)
 
         return {id};
     }

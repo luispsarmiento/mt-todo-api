@@ -9,9 +9,9 @@ const boom = require('@hapi/boom');
 
 //const client = new MongoClient(uri);
 let _uri;
-
 const setUri = (uri) => _uri = uri;
-const getUri = () => _uri;
+let _db;
+const setDB = (db) => _db = db;
 
 const connectDB = async (uri) => {
     try{
@@ -28,14 +28,14 @@ const connectDB = async (uri) => {
     }
 };
 
-const execute = async(collName, query) => {
+const execute = async(collName, operation) => {
     let conn;
     let result;
 
     try {
-        conn = await connectDB(getUri());
-        const coll = conn.db().collection(collName);
-        result = await query(coll);
+        conn = await connectDB(_uri);
+        const coll = conn.db(_db).collection(collName);
+        result = await operation(coll);
     } finally {
         await conn.close();
     }
@@ -43,7 +43,7 @@ const execute = async(collName, query) => {
     return result;
 }
 
-module.exports = { connectDB, setUri, getUri, execute };
+module.exports = { connectDB, setUri, setDB, execute };
 
 /*async function run() {
   try {

@@ -14,6 +14,7 @@ const {errorHandler, boomErrorHandler} = require('./middleware/error');
 dotenv.config({ path: './config/.env' });
 
 db.setUri(process.env.MONGO_URI);
+db.setDB(process.env.MONGO_DB);
 
 app.use(express.json());
 
