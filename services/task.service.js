@@ -4,6 +4,8 @@ const TaskRepository = require('./../repositories/task.repository');
 
 const repository = new TaskRepository();
 
+const PENDING_STATUS = "Pending";
+
 class TaskService {
 
     constructor(){
@@ -22,10 +24,11 @@ class TaskService {
 
     async create(task){
         const newTask = {
-            ...task
+            ...task,
+            status: PENDING_STATUS,
         }
 
-        const result = await repository.create(task);
+        const result = await repository.create(newTask);
 
         newTask._id = result.insertedId;
 

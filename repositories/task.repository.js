@@ -2,6 +2,7 @@ const db = require('./../config/db');
 const { ObjectId } = require('mongodb');
 
 const COLLECTION_NAME = "task"
+const getLocaleDate = () => new Date(new Date().setHours(new Date().getHours() - 6));
 
 class TaskRepository {
 
@@ -17,6 +18,12 @@ class TaskRepository {
     }
 
     async create(task){
+        task = {
+            ...task,
+            createAt: getLocaleDate(),
+            updateAt: getLocaleDate()
+        };
+
         const insertOne = (coll) => coll.insertOne(task);
 
         let result = await db.execute(COLLECTION_NAME, insertOne);
@@ -25,11 +32,25 @@ class TaskRepository {
     }
 
     async update(id, newTask){
-        const replaceOne = (coll) => coll.replaceOne({
+        const filter = {
             _id: new ObjectId(id)
-        }, newTask);
+        };
 
-        let result = await db.execute(COLLECTION_NAME, replaceOne);
+        const updateTask = {
+            $set: {
+                name: newTask.name,
+                scheduledDate: new Date(newTask.scheduledDate) || null,
+                status: newTask.status,
+                completedDate: newTask.completedDate != null ? new Date(newTask.completedDate) : null,
+                updateAt: getLocaleDate()
+            },
+            $setOnInsert: { createAt: getLocaleDate() }
+        };
+        const options = { upsert: true };
+
+        const updateOne = (coll) => coll.updateOne(filter, updateTask, options);
+
+        let result = await db.execute(COLLECTION_NAME, updateOne);
 
         return result;
     }
