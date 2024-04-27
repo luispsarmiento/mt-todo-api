@@ -1,4 +1,4 @@
-const {faker} = require('@faker-js/faker');
+//const {faker} = require('@faker-js/faker');
 const boom = require('@hapi/boom');
 const TaskRepository = require('./../repositories/task.repository');
 
@@ -12,14 +12,14 @@ class TaskService {
     }
 
     generate(){
-        const limit = 100;
+        /*const limit = 100;
         for(let i=0; i < limit; i++){
             this.task.push({
                 id: faker.database.mongodbObjectId(),
                 name: faker.word.verb(),
                 isDone: false
             });
-        }
+        }*/
     }
 
     async create(task){
