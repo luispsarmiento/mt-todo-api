@@ -11,25 +11,30 @@ const {
     update,
     remove 
 } = require('../controllers/task.controller');
+const { authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', getTasks);
+router.get('/', authorize, getTasks);
   
 router.get('/:id',
+    authorize,
     getTaskByIdValidation,
     getTaskById);
 
-router.post('/', 
+router.post('/',
+    authorize,
     createTaskValidation,
     create)
 
-router.patch('/:id', 
+router.patch('/:id',
+    authorize,
     getTaskByIdValidation,
     updateTaskValidation,
     update);
 
-router.delete('/:id', 
+router.delete('/:id',
+    authorize,
     getTaskByIdValidation,
     remove);
 
