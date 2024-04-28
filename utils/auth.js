@@ -1,11 +1,5 @@
-// This is to encrypt data
 
-const getToken = async (apiKey) => {
-    var salt = await bcrypt.genSaltSync(16);
-    var hash = await bcrypt.hashSync(apiKey, salt);
-
-    return `${hash}.${salt}`
-};
+const mtCrypt = require('./mtCrypt')
 
 let _whiteListApiKey = [];
 const getApiKeys = () => {
@@ -13,11 +7,12 @@ const getApiKeys = () => {
     _whiteListApiKey = whieListApiKey.split('|');
 }
 
-const getApiKeyByHash = async (hashApiKey) => {
+const getApiKeyByHash = (hashApiKey, key) => {
     let _apiKey = undefined;
     for(let apiKey of _whiteListApiKey){
-        let equeal = await bcrypt.compare(apiKey, hashApiKey);
-        if (equeal){
+        let apiKeyDecrypted = mtCrypt.decrypt(hashApiKey, key);
+        let equal = apiKey === apiKeyDecrypted;
+        if (equal){
             _apiKey = apiKey;
             break;
         }
@@ -37,4 +32,4 @@ const isValid = async (apiKey) => {
     return isValid;
 }
 
-module.exports = {getToken, getApiKeys, getApiKeyByHash, isValid};
+module.exports = {getApiKeys, getApiKeyByHash, isValid};

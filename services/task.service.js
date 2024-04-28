@@ -4,7 +4,7 @@ const TaskRepository = require('./../repositories/task.repository');
 
 const repository = new TaskRepository();
 
-const PENDING_STATUS = "Pending";
+const PENDING_STATUS = "pending";
 
 class TaskService {
 
