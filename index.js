@@ -9,6 +9,9 @@ const hpp = require('hpp');
 const xss = require('xss-clean');
 const cors = require('cors');
 const {errorHandler, boomErrorHandler} = require('./middleware/error');
+const auth = require('./utils/auth');
+
+auth.getApiKeys();
 
 // Load env vars
 dotenv.config({ path: './config/.env' });

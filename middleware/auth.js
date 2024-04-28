@@ -2,36 +2,20 @@ const asyncHandler = require("./async");
 const bcrypt = require('bcryptjs');
 const boom = require('@hapi/boom');
 const moment = require('moment');
-
-let _whiteListApiKey = [];
-const getApiKeys = () => {
-    const whieListApiKey = process.env.WHITELIST_API_KEY
-    _whiteListApiKey = whieListApiKey.split('|');
-}
-
-const getApiKey = async (hashApiKey) => {
-    let _apiKey = undefined;
-    for(let apiKey of _whiteListApiKey){
-        let equeal = await bcrypt.compare(apiKey, hashApiKey);
-        if (equeal){
-            _apiKey = apiKey;
-            break;
-        }
-    }
-
-    return _apiKey;
-}
+const auth = require('../utils/auth');
 
 exports.authorize = asyncHandler(async (req, res, next) => {
-    getApiKeys();
     
     let apiKeyHeader = req.headers['x-api-key'] ?? undefined;
     if (apiKeyHeader === undefined){
         return next(boom.unauthorized());
     }
 
+    //TODO: check if the api key exists in cache
+
     try{
-        let apiKey = await getApiKey(apiKeyHeader);
+        apiKeyHeader = apiKeyHeader.split('.')[0];
+        let apiKey = await auth.getApiKeyByHash(apiKeyHeader);
 
         if(apiKey === undefined){
             return next(boom.unauthorized());
