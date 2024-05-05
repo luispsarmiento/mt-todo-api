@@ -8,9 +8,9 @@ class TaskRepository {
 
     constructor(){}
 
-    async find(id=''){
-        const find = (coll) => id == '' ? coll.find().toArray() 
-                                        : coll.find({_id: new ObjectId(id)}).toArray();
+    async find(userId, id=''){
+        const find = (coll) => id == '' ? coll.find({user_id: new ObjectId(userId)}).toArray() 
+                                        : coll.find({_id: new ObjectId(id), user_id: new ObjectId(userId)}).toArray();
 
         let result = await db.execute(COLLECTION_NAME, find);
 
@@ -18,10 +18,12 @@ class TaskRepository {
     }
 
     async create(task){
+        const user_id = new ObjectId(task.user_id);
         task = {
             ...task,
             createAt: getLocaleDate(),
-            updateAt: getLocaleDate()
+            updateAt: getLocaleDate(),
+            user_id: user_id
         };
 
         const insertOne = (coll) => coll.insertOne(task);
@@ -35,14 +37,16 @@ class TaskRepository {
         const filter = {
             _id: new ObjectId(id)
         };
-
+        
+        const user_id = new ObjectId(newTask.user_id);
         const updateTask = {
             $set: {
                 name: newTask.name,
                 scheduledDate: new Date(newTask.scheduledDate) || null,
                 status: newTask.status,
                 completedDate: newTask.completedDate != null ? new Date(newTask.completedDate) : null,
-                updateAt: getLocaleDate()
+                updateAt: getLocaleDate(),
+                user_id: user_id
             },
             $setOnInsert: { createAt: getLocaleDate() }
         };

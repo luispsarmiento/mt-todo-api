@@ -31,7 +31,7 @@ const connectDB = async (uri) => {
 const execute = async(collName, operation) => {
     let conn;
     let result;
-
+    
     try {
         conn = await connectDB(_uri);
         const coll = conn.db(_db).collection(collName);

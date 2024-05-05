@@ -35,13 +35,13 @@ class TaskService {
         return newTask;
     }
 
-    async find(){
-        let result = await repository.find();
+    async find(user_id){
+        let result = await repository.find(user_id);
         return result;
     }
 
-    async findOne(id){
-        const task = await repository.find(id);
+    async findOne(user_id, id){
+        const task = await repository.find(user_id, id);
 
         if(!task){
             throw boom.notFound('Task not found');
