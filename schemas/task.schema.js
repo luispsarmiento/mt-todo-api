@@ -3,19 +3,24 @@ Joi.objectId = require('joi-objectid')(Joi); //Reference: https://stackoverflow.
 
 const id = Joi.objectId();
 const name = Joi.string().min(10).max(200);
-const scheduledDate = Joi.date().format('YYYY-MM-DD HH:mm:ss')
-const status = Joi.string().min(7).max(9)
-const completedDate = Joi.date().format('YYYY-MM-DD HH:mm:ss')
+const scheduledDate = Joi.date().format('YYYY-MM-DD HH:mm:ss');
+const status = Joi.string().min(7).max(9);
+const completedDate = Joi.date().format('YYYY-MM-DD HH:mm:ss');
+const notes = Joi.string().min(0).max(1500);
+const priority = Joi.number().integer().min(0);
 
 const createTaskSchema = Joi.object({
-    name: name.required()
+    name: name.required(),
+    priority: priority.required()
 });
 
 const updateTaskSchema = Joi.object({
     name: name.required(),
+    priority: priority.required(),
     scheduledDate: scheduledDate,
     status: status.required(),
-    completedDate: completedDate
+    completedDate: completedDate,
+    notes: notes
 });
 
 const getTaskSchema = Joi.object({

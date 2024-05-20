@@ -42,11 +42,13 @@ class TaskRepository {
         const updateTask = {
             $set: {
                 name: newTask.name,
+                priority: newTask.priority,
                 scheduledDate: new Date(newTask.scheduledDate) || null,
                 status: newTask.status,
                 completedDate: newTask.completedDate != null ? new Date(newTask.completedDate) : null,
                 updateAt: getLocaleDate(),
-                user_id: user_id
+                user_id: user_id,
+                notes: newTask.notes
             },
             $setOnInsert: { createAt: getLocaleDate() }
         };
