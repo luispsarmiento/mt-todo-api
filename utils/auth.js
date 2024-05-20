@@ -23,7 +23,7 @@ const getApiKeyByHash = (hashApiKey, key) => {
 
 const isValid = async (apiKey) => {
     let isValid = false;
-    let _apiKey = _whiteListApiKey.filter(k => k === apiKey);
+    let _apiKey = _whiteListApiKey.filter(k => k == apiKey);
 
     if (_apiKey != undefined && _apiKey.length > 0){
         isValid = true;
