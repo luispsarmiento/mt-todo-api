@@ -3,9 +3,9 @@ Joi.objectId = require('joi-objectid')(Joi); //Reference: https://stackoverflow.
 
 const id = Joi.objectId();
 const name = Joi.string().min(10).max(200);
-const scheduledDate = Joi.date().format('YYYY-MM-DD HH:mm:ss');
+const scheduledDate = Joi.date().utc();
 const status = Joi.string().min(7).max(9);
-const completedDate = Joi.date().format('YYYY-MM-DD HH:mm:ss');
+const completedDate = Joi.date().utc();
 const notes = Joi.string().min(0).max(1500);
 const priority = Joi.number().integer().min(0);
 

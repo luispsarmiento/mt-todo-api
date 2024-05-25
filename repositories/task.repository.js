@@ -21,8 +21,8 @@ class TaskRepository {
         const user_id = new ObjectId(task.user_id);
         task = {
             ...task,
-            createAt: getLocaleDate(),
-            updateAt: getLocaleDate(),
+            createAt: new Date(),
+            updateAt: new Date(),
             user_id: user_id
         };
 
@@ -46,11 +46,11 @@ class TaskRepository {
                 scheduledDate: new Date(newTask.scheduledDate) || null,
                 status: newTask.status,
                 completedDate: newTask.completedDate != null ? new Date(newTask.completedDate) : null,
-                updateAt: getLocaleDate(),
+                updateAt: new Date(),
                 user_id: user_id,
                 notes: newTask.notes
             },
-            $setOnInsert: { createAt: getLocaleDate() }
+            $setOnInsert: { createAt: new Date() }
         };
         const options = { upsert: true };
 
