@@ -11,7 +11,11 @@ const priority = Joi.number().integer().min(0);
 
 const createTaskSchema = Joi.object({
     name: name.required(),
-    priority: priority.required()
+    priority: priority.required(),
+    scheduledDate: scheduledDate,
+    status: status,
+    completedDate: completedDate,
+    notes: notes
 });
 
 const updateTaskSchema = Joi.object({
