@@ -3,6 +3,8 @@ const mtCrypt = require('../utils/mtCrypt');
 const boom = require('@hapi/boom');
 const auth = require('../utils/auth');
 const cache = require('../utils/cache');
+const superagent = require('superagent');
+const { boomErrorHandler } = require('../middleware/error');
 
 const router = express.Router();
 
@@ -15,24 +17,45 @@ const getToken = (apiKey) => {
     return `${hash}`
 }
 
-router.post('/', (req, res, next) =>{
+router.post('/', async (req, res, next) =>{
     try{
-        if(req.body.apiKey === undefined || req.body.apiKey === ''){
-            return next(boom.badRequest());
-        }
+        const response = await superagent.post(process.env.SECURITY_API_URL+"/api/OAuth/Login").send(req.body);
+        const data = await response.body;
 
-        if(!auth.isValid(req.body.apiKey)){
-            return next(boom.unauthorized());
-        }
-
-        const apiKey = getToken(req.body.apiKey);
-
-        res.status(201).json({
-            message: 'created',
-            apiKey: apiKey
-        });
+        res.status(201).json(data);
     }catch(err){
-        next(err)
+        res.status(err.status).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+router.post('/refresh-token', async (req, res, next) =>{
+    try{
+        const response = await superagent.post(process.env.SECURITY_API_URL+"/api/OAuth/RefreshToken").send(req.body);
+        const data = await response.body;
+
+        res.status(201).json(data);
+    }catch(err){
+        res.status(err.status).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+router.post('/logout', async (req, res, next) =>{
+    try{
+        const response = await superagent.post(process.env.SECURITY_API_URL+"/api/OAuth/Logout").send(req.body);
+        const data = await response.body;
+
+        res.status(201).json(data);
+    }catch(err){
+        res.status(err.status).json({
+            success: false,
+            message: err.message
+        });
     }
 });
 

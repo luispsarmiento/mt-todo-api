@@ -10,7 +10,7 @@ class UserRepository {
 
     async find(id=''){
         const find = (coll) => id == '' ? coll.find().toArray() 
-                                        : coll.find({_id: new ObjectId(id)}).toArray();
+                                        : coll.find({userSecurityId: id}).toArray();//coll.find({_id: new ObjectId(id)}).toArray();
 
         let result = await db.execute(COLLECTION_NAME, find);
 
