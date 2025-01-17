@@ -2,7 +2,7 @@ const Joi = require('joi').extend(require('@joi/date'));
 Joi.objectId = require('joi-objectid')(Joi); //Reference: https://stackoverflow.com/questions/57658864/how-to-validate-for-objectid
 
 const id = Joi.objectId();
-const name = Joi.string().min(10).max(200);
+const name = Joi.string().min(1).max(200);
 const scheduledDate = Joi.date().utc().allow(null);
 const status = Joi.string().min(7).max(9);
 const completedDate = Joi.date().utc().allow(null);
