@@ -9,17 +9,12 @@ const hpp = require('hpp');
 const xss = require('xss-clean');
 const cors = require('cors');
 const {errorHandler, boomErrorHandler} = require('./middleware/error');
-const auth = require('./utils/auth');
-const cache = require('./utils/cache');
 
 // Load env vars
 dotenv.config({ path: './config/.env' });
 
 db.setUri(process.env.MONGO_URI);
 db.setDB(process.env.MONGO_DB);
-//cache.init();
-
-auth.getApiKeys();
 
 app.use(express.json());
 
