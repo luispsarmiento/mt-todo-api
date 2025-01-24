@@ -37,6 +37,11 @@ class TaskRepository {
             _id: new ObjectId(id)
         };
 
+        let focusTimer = null;
+        if (newTask.completedDate != null && newTask.startDate != null){
+          focusTimer = (new Date(newTask.completedDate)) - (new Date(newTask.startDate));
+        }
+
         const user_id = new ObjectId(newTask.user_id);
         const updateTask = {
             $set: {
@@ -48,7 +53,9 @@ class TaskRepository {
                 updateAt: new Date(),
                 user_id: user_id,
                 notes: newTask.notes,
-                subTasks: newTask.subTasks || null
+                subTasks: newTask.subTasks || null,
+                startDate: newTask.startDate != null ? new Date(newTask.startDate) : null,
+                focusTimer: focusTimer
             },
             $setOnInsert: { createAt: new Date() }
         };
