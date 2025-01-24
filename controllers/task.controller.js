@@ -1,4 +1,3 @@
-const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const TaskService = require('./../services/task.service');
 
@@ -66,7 +65,7 @@ exports.update = asyncHandler(async (req, res, next) => {
 exports.remove = asyncHandler(async (req, res, next) => {
     try {
         const {id} = req.params;
-        
+
         await service.delete(id);
 
         res.json({

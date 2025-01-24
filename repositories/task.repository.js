@@ -1,15 +1,14 @@
 const db = require('./../config/db');
 const { ObjectId } = require('mongodb');
 
-const COLLECTION_NAME = "task"
-const getLocaleDate = () => new Date(new Date().setHours(new Date().getHours() - 6));
+const COLLECTION_NAME = "task";
 
 class TaskRepository {
 
     constructor(){}
 
     async find(userId, id=''){
-        const find = (coll) => id == '' ? coll.find({user_id: new ObjectId(userId)}).toArray() 
+        const find = (coll) => id == '' ? coll.find({user_id: new ObjectId(userId)}).toArray()
                                         : coll.find({_id: new ObjectId(id), user_id: new ObjectId(userId)}).toArray();
 
         let result = await db.execute(COLLECTION_NAME, find);
@@ -37,7 +36,7 @@ class TaskRepository {
         const filter = {
             _id: new ObjectId(id)
         };
-        
+
         const user_id = new ObjectId(newTask.user_id);
         const updateTask = {
             $set: {
@@ -48,7 +47,8 @@ class TaskRepository {
                 completedDate: newTask.completedDate != null ? new Date(newTask.completedDate) : null,
                 updateAt: new Date(),
                 user_id: user_id,
-                notes: newTask.notes
+                notes: newTask.notes,
+                subTasks: newTask.subTasks || null
             },
             $setOnInsert: { createAt: new Date() }
         };

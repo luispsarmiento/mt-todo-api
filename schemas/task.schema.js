@@ -9,13 +9,19 @@ const completedDate = Joi.date().utc().allow(null);
 const notes = Joi.string().min(0).max(1500);
 const priority = Joi.number().integer().min(0);
 
+const subTaskSchema = Joi.object({
+  name: name,
+  status: status
+});
+
 const createTaskSchema = Joi.object({
     name: name.required(),
     priority: priority.required(),
     scheduledDate: scheduledDate,
     status: status,
     completedDate: completedDate,
-    notes: notes
+    notes: notes,
+    subTasks: Joi.array().items(subTaskSchema)
 });
 
 const updateTaskSchema = Joi.object({
@@ -24,7 +30,8 @@ const updateTaskSchema = Joi.object({
     scheduledDate: scheduledDate,
     status: status.required(),
     completedDate: completedDate,
-    notes: notes
+    notes: notes,
+    subTasks: Joi.array().items(subTaskSchema)
 });
 
 const getTaskSchema = Joi.object({
