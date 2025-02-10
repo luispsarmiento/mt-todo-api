@@ -11,17 +11,6 @@ class TaskService {
     constructor(){
     }
 
-    generate(){
-        /*const limit = 100;
-        for(let i=0; i < limit; i++){
-            this.task.push({
-                id: faker.database.mongodbObjectId(),
-                name: faker.word.verb(),
-                isDone: false
-            });
-        }*/
-    }
-
     async create(task){
         const newTask = {
             ...task,
