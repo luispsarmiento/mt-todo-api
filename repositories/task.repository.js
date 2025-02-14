@@ -18,11 +18,16 @@ class TaskRepository {
 
     async create(task){
         const user_id = new ObjectId(task.user_id);
+        let space_id = null;
+        if (task.space_id){
+            space_id = new ObjectId(task.space_id);
+        }
         task = {
             ...task,
             createAt: new Date(),
             updateAt: new Date(),
-            user_id: user_id
+            user_id: user_id,
+            space_id: space_id
         };
 
         const insertOne = (coll) => coll.insertOne(task);
@@ -80,6 +85,25 @@ class TaskRepository {
         });
 
         let result = await db.execute(COLLECTION_NAME, deleteOne);
+
+        return result;
+    }
+
+    async moveToSpace(id, newTask){
+        const filter = {
+            _id: new ObjectId(id)
+        };
+
+        const updateTask = {
+            $set: {
+                user_id: new ObjectId(newTask.user_id),
+                space_id: new ObjectId(newTask.space_id)
+            }
+        };
+
+        const updateOne = (coll) => coll.updateOne(filter, updateTask);
+
+        let result = await db.execute(COLLECTION_NAME, updateOne);
 
         return result;
     }

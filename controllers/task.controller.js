@@ -76,3 +76,18 @@ exports.remove = asyncHandler(async (req, res, next) => {
         next(err);
     }
 });
+
+exports.moveToSpace = asyncHandler(async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        const body = {...req.body, user_id: req.user._id};
+        const taskChanged = await service.moveToSpace(id, body);
+
+        res.json({
+            message: 'update',
+            data: taskChanged,
+        });
+    } catch (err) {
+        next(err);
+    }
+});

@@ -11,6 +11,7 @@ const priority = Joi.number().integer().min(0);
 const startDate = Joi.date().utc().allow(null);
 const breakDate = Joi.date().utc().allow(null);
 const focusTimer = Joi.number().allow(null)
+const space_id = Joi.objectId();
 
 const subTaskSchema = Joi.object({
   name: name,
@@ -24,7 +25,8 @@ const createTaskSchema = Joi.object({
     status: status,
     completedDate: completedDate,
     notes: notes,
-    subTasks: Joi.array().items(subTaskSchema)
+    subTasks: Joi.array().items(subTaskSchema),
+    space_id: space_id
 });
 
 const updateTaskSchema = Joi.object({
@@ -44,4 +46,8 @@ const getTaskSchema = Joi.object({
     id: id.required()
 });
 
-module.exports = { createTaskSchema, updateTaskSchema, getTaskSchema };
+const moveToSpaceSchema = Joi.object({
+    space_id: space_id.required()
+});
+
+module.exports = { createTaskSchema, updateTaskSchema, getTaskSchema, moveToSpaceSchema };

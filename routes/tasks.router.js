@@ -2,14 +2,16 @@ const express = require('express');
 const { 
     getTaskByIdValidation, 
     createTaskValidation, 
-    updateTaskValidation 
+    updateTaskValidation,
+    moveToSpaceValidation
 } = require('../validations/task.validation');
 const { 
     getTasks,
     getTaskById,
     create,
     update,
-    remove 
+    remove,
+    moveToSpace 
 } = require('../controllers/task.controller');
 const { authentication } = require('../middleware/auth');
 
@@ -37,5 +39,11 @@ router.delete('/:id',
     authentication,
     getTaskByIdValidation,
     remove);
+
+router.patch('/move-to-space/:id',
+    authentication,
+    getTaskByIdValidation,
+    moveToSpaceValidation,
+    moveToSpace);
 
 module.exports = router;

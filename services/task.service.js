@@ -55,6 +55,17 @@ class TaskService {
 
         return {id};
     }
+
+    async moveToSpace(id, change){
+        await repository.moveToSpace(id, change)
+        
+        const taskChanged = {
+            _id: id,
+            ...change
+        }
+
+        return taskChanged;
+    }
 }
 
 module.exports = TaskService;
